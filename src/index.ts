@@ -50,17 +50,21 @@ class ServerlessOfflinePactPlugin {
     //   specification are currently fully supported. Pacts using the v3 format may be used, however, any matching features
     //   added in v3 will currently be ignored.
 
-    const filePath = options.filePath ? options.filePath: 'pact.json'
-    const port = options.port ? options.port.toString() : '9999'
-    const host = options.host ? options.host : 'localhost'
-    const logLevel = options.logLevel ? options.logLevel : 'DEBUG'
-    const brokerUsername = options.brokerUsername ? options.brokerUsername : null
-    const brokerPassword = options.brokerPassword ? options.brokerPassword : null
-    const brokerToken = options.brokerToken ? options.brokerToken : null
-    const cors = options.cors ? "CORS" : null
-    const ssl = options.ssl ? options.ssl : null
-    const sslCertPath = options.sslCertPath ? options.sslCertPath : null
-    const sslKeyPath = options.sslKeyPath ? options.sslKeyPath : null
+    const filePath = options.filePath ? options.filePath : "pact.json";
+    const port = options.port ? options.port.toString() : "9999";
+    const host = options.host ? options.host : "localhost";
+    const logLevel = options.logLevel ? options.logLevel : "DEBUG";
+    const brokerUsername = options.brokerUsername
+      ? options.brokerUsername
+      : null;
+    const brokerPassword = options.brokerPassword
+      ? options.brokerPassword
+      : null;
+    const brokerToken = options.brokerToken ? options.brokerToken : null;
+    const cors = options.cors ? "CORS" : null;
+    const ssl = options.ssl ? options.ssl : null;
+    const sslCertPath = options.sslCertPath ? options.sslCertPath : null;
+    const sslKeyPath = options.sslKeyPath ? options.sslKeyPath : null;
 
     const args = [`${PACT_LOCAL_PATH}/pact-stub-service`];
 
@@ -71,29 +75,29 @@ class ServerlessOfflinePactPlugin {
     args.push(`--port`);
     args.push(port);
     if (brokerUsername && brokerPassword && brokerToken) {
-      args.push(`--broker-username`)
-      args.push(brokerUsername)
-      args.push(`--broker-username`)
-      args.push(brokerPassword)
-      args.push(`--broker-username`)
-      args.push(brokerToken)
+      args.push(`--broker-username`);
+      args.push(brokerUsername);
+      args.push(`--broker-username`);
+      args.push(brokerPassword);
+      args.push(`--broker-username`);
+      args.push(brokerToken);
     }
     // if (cors || ssl || sslCertPath || sslKeyPath){
     //   args.push(`-o`)
-    if (cors){
-      args.push(`--cors`)
-      args.push(cors)
+    if (cors) {
+      args.push(`--cors`);
+      args.push(cors);
     }
-    if (ssl){
-      args.push(`--ssl`)
+    if (ssl) {
+      args.push(`--ssl`);
     }
-    if (sslCertPath){
-      args.push(`--sslcert`)
-      args.push(sslCertPath)
+    if (sslCertPath) {
+      args.push(`--sslcert`);
+      args.push(sslCertPath);
     }
-    if (sslKeyPath){
-      args.push(`--sslkey`)
-      args.push(sslKeyPath)
+    if (sslKeyPath) {
+      args.push(`--sslkey`);
+      args.push(sslKeyPath);
     }
     // }
 
@@ -127,7 +131,7 @@ class ServerlessOfflinePactPlugin {
       });
     });
 
-    return { proc, port, host, filePath,startupLog};
+    return { proc, port, host, filePath, startupLog };
   };
 
   private waitForStart = async (
@@ -145,7 +149,7 @@ class ServerlessOfflinePactPlugin {
   };
 
   private killPactProcess = (options: PactLaunchOptions) => {
-    const port = options.port ? options.port.toString() : 9999
+    const port = options.port ? options.port.toString() : 9999;
 
     if (this.pactInstances[port] != null) {
       this.pactInstances[port].kill("SIGKILL");
@@ -156,7 +160,9 @@ class ServerlessOfflinePactPlugin {
   private shouldExecute = () => {
     if (
       this.PactConfig.stub.stages &&
-      this.PactConfig.stub.stages.includes(this.serverless.service.provider.stage)
+      this.PactConfig.stub.stages.includes(
+        this.serverless.service.provider.stage,
+      )
     ) {
       return true;
     }
@@ -171,7 +177,13 @@ class ServerlessOfflinePactPlugin {
       return;
     }
 
-    const { port, proc,host,filePath,startupLog } = await this.spawnPactProcess(this.PactConfig.stub);
+    const {
+      port,
+      proc,
+      host,
+      filePath,
+      startupLog,
+    } = await this.spawnPactProcess(this.PactConfig.stub);
 
     proc.on("close", (code) => {
       this.serverless.cli.log(
@@ -183,9 +195,7 @@ class ServerlessOfflinePactPlugin {
       `Pact Offline - Loaded ${filePath}, visit: http://${host}:${port}`,
     );
 
-    this.serverless.cli.log(
-      `Loaded interactions ${startupLog}`,
-    );
+    this.serverless.cli.log(`Loaded interactions ${startupLog}`);
 
     await Promise.resolve();
   };
