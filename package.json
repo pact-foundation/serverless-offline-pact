@@ -1,0 +1,80 @@
+{
+  "name": "serverless-offline-pact",
+  "version": "0.0.1",
+  "description": "Serverless Framework Plugin to download and run a pact stub service",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "lint": "eslint './src/**/*.{js,ts,tsx}'",
+    "lint:fix": "eslint './src/**/*.{js,ts,tsx}' --fix",
+    "test": "jest",
+    "test:watch": "jest --watchAll",
+    "build": "tsc",
+    "watch": "tsc -w",
+    "start": "npm link && nodemon",
+    "make_bin": "mkdir -p bin",
+    "download": "curl -L https://github.com/pact-foundation/pact-ruby-standalone/releases/download/v1.85.0/pact-1.85.0-osx.tar.gz | tar -xz",
+    "download:mac": "curl -L https://github.com/pact-foundation/pact-ruby-standalone/releases/download/v1.85.0/pact-1.85.0-osx.tar.gz | tar -xz",
+    "download:linux64": "curl -L https://github.com/pact-foundation/pact-ruby-standalone/releases/download/v1.85.0/pact-1.85.0-linux-x86_64.tar.gz | tar -xz",
+    "download:linux32": "curl -L https://github.com/pact-foundation/pact-ruby-standalone/releases/download/v1.85.0/pact-1.85.0-linux-x86.tar.gz | tar -xz",
+    "download:win": "curl -L  | tar -xz",
+    "postinstall": "npm run make_bin && cd bin && npm run download",
+    "semantic-release": "semantic-release"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/YOU54F/serverless-offline-pact.git"
+  },
+  "keywords": [
+    "serverless",
+    "serverless-plugin",
+    "sls",
+    "sls-plugin",
+    "aws",
+    "pact",
+    "local",
+    "offline"
+  ],
+  "author": {
+    "name": "YOU54F"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/YOU54F/serverless-offline-pact/issues"
+  },
+  "homepage": "https://github.com/YOU54F/serverless-offline-pact#readme",
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run lint && npm test",
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
+      "pre-push": "npm run lint && npm test"
+    }
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^8.3.5",
+    "@commitlint/config-conventional": "^8.3.4",
+    "@types/jest": "^25.2.3",
+    "@types/node": "^14.0.11",
+    "@types/serverless": "^1.72.0",
+    "@typescript-eslint/eslint-plugin": "^3.1.0",
+    "@typescript-eslint/parser": "^3.1.0",
+    "eslint": "^7.2.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-prettier": "^3.1.3",
+    "husky": "^4.2.5",
+    "jest": "^26.0.1",
+    "nodemon": "^2.0.4",
+    "prettier": "^2.0.5",
+    "semantic-release": "^17.0.8",
+    "ts-jest": "^26.1.0",
+    "typescript": "^3.9.5"
+  },
+  "files": [
+    "dist/**/*"
+  ],
+  "dependencies": {
+    "@rauschma/stringio": "^1.4.0",
+    "aws-sdk": "^2.691.0",
+    "serverless": "^1.72.0"
+  }
+}

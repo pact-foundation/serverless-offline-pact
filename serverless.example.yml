@@ -1,0 +1,37 @@
+service: pact-mock
+
+provider:
+  name: aws
+  versionFunctions: false
+  runtime: nodejs12.x
+  region: eu-west-2
+  stage: ${opt:stage, 'dev'}
+
+plugins:
+  - serverless-offline-pact
+
+custom:
+  pact:
+    stub:
+      filePath: 'pact.json' # URI if broker params provided
+      port: '9999' # Port on which to run the service
+      host: 'localhost' # Host on which to bind the service Default: localhost
+      logLevel: 'DEBUG' # Log level. Options are DEBUG INFO WARN ERROR Default: DEBUG
+      brokerUsername: '' # Pact Broker basic auth username
+      brokerPassword: '' # Pact Broker basic auth password
+      brokerToken: '' # Pact Broker bearer token (can also be set using the PACT_BROKER_TOKEN environment variable)
+      cors: true # Support browser security in tests by responding to OPTIONS requests and adding CORS headers to mocked responses
+      ssl: false # Use a self-signed SSL cert to run the service over HTTPS
+      sslCertPath: '' # Specify the path to the SSL cert to use when running the service over HTTPS
+      sslKeyPath: '' # Specify the path to the SSL key to use when running the service over HTTPS
+      stages:
+        - dev
+      noStart: true
+
+#  Start a stub service with the given pact file(s) or directories.
+#  Pact URIs may be local file or directory paths, or HTTP.
+#  Include any basic auth details in the URL using the format https://USERNAME:PASSWORD@URI.
+#  Where multiple matching interactions are found, the interactions will be sorted by response status, and the first one will be returned.
+#  This may lead to some non-deterministic behaviour. If you are having problems with this, please raise it on the pact slack channel.
+#  Note that only versions 1 and 2 of the pact specification are currently fully supported.
+#  Pacts using the v3 format may be used, however, any matching features added in v3 will currently be ignored.
