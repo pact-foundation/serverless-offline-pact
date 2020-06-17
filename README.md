@@ -98,3 +98,8 @@ custom:
 - This may lead to some non-deterministic behaviour. If you are having problems with this, please raise it on the pact slack channel.
 - Note that only versions 1 and 2 of the pact specification are currently fully supported. 
 - Pacts using the v3 format may be used, however, any matching features added in v3 will currently be ignored.
+
+## TODO
+
+- Tests
+- Detect operating system and download corresponding binary currently downloads macosx, need to support linux 32/64bit and windows
