@@ -1,6 +1,6 @@
 {
   "name": "serverless-offline-pact",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "Serverless Framework Plugin to download and run a pact stub service",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

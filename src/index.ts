@@ -17,11 +17,11 @@ class ServerlessOfflinePactPlugin {
   public constructor(private serverless: Serverless) {
     this.commands = {};
 
-    this.PactConfig = this.serverless.service?.custom?.Pact || {};
+    this.PactConfig = this.serverless.service?.custom?.pact || {};
 
     this.hooks = {
       "before:offline:start:end": this.stopPact,
-      "before:offline:start": this.startPact,
+      "before:offline:start:init": this.startPact,
     };
   }
 
@@ -82,8 +82,6 @@ class ServerlessOfflinePactPlugin {
       args.push(`--broker-username`);
       args.push(brokerToken);
     }
-    // if (cors || ssl || sslCertPath || sslKeyPath){
-    //   args.push(`-o`)
     if (cors) {
       args.push(`--cors`);
       args.push(cors);
@@ -99,10 +97,12 @@ class ServerlessOfflinePactPlugin {
       args.push(`--sslkey`);
       args.push(sslKeyPath);
     }
-    // }
 
     args.push(filePath);
 
+    this.serverless.cli.log(
+      `Pact Offline - Starting pact stub service with ${args}`,
+    );
     const proc = spawn("/bin/sh", ["-c", args.join(" ")]);
     const startupLog: string[] = [];
     const started = await this.waitForStart(proc.stdout, startupLog);
@@ -172,7 +172,7 @@ class ServerlessOfflinePactPlugin {
   private startPact = async () => {
     if (this.PactConfig.stub.noStart || !this.shouldExecute()) {
       this.serverless.cli.log(
-        "Pact Offline - [noStart] options is true. Will not start.",
+        "Pact Offline - noStart option set or non configured stage. Will not start.",
       );
       return;
     }
@@ -190,12 +190,15 @@ class ServerlessOfflinePactPlugin {
         `Pact Offline - Failed to start with code ${code}`,
       );
     });
+    proc.on("data", (data) => {
+      this.serverless.cli.log(`Pact Offline - ${data.toString()}`);
+    });
 
     this.serverless.cli.log(
       `Pact Offline - Loaded ${filePath}, visit: http://${host}:${port}`,
     );
 
-    this.serverless.cli.log(`Loaded interactions ${startupLog}`);
+    this.serverless.cli.log(`${startupLog}`);
 
     await Promise.resolve();
   };
