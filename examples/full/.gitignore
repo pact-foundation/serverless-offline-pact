@@ -1,0 +1,11 @@
+node_modules
+.serverless
+.webpack
+node_modules
+out*.json
+.DS_Store
+.project
+out/
+coverage/
+.vscode
+layer/pact

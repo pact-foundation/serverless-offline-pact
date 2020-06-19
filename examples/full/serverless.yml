@@ -1,0 +1,46 @@
+service: pact-mock
+
+provider:
+  name: aws
+  versionFunctions: false
+  runtime: nodejs12.x
+  region: eu-west-2
+  stage: ${opt:stage, 'local'}
+
+plugins:
+  - serverless-webpack
+  - serverless-offline-pact
+  - 'serverless-offline'
+
+custom:
+  serverless-offline:
+    location: .webpack/service
+  pact:
+    stub:
+      stages: # Enables stub, based on stage parameter
+        - local
+      filePath: '../../pact.json' # URI if broker params provided
+      port: '9000' # Port on which to run the service
+      # host: 'sut' # Host on which to bind the service Default: localhost
+      logLevel: 'DEBUG' # Log level. Options are DEBUG INFO WARN ERROR Default: DEBUG
+      # brokerUsername: 'd' # Pact Broker basic auth username
+      # brokerPassword: 'd' # Pact Broker basic auth password
+      # brokerToken: 'd' # Pact Broker bearer token (can also be set using the PACT_BROKER_TOKEN environment variable)
+      cors: true # Support browser security in tests by responding to OPTIONS requests and adding CORS headers to mocked responses
+      ssl: false # Use a self-signed SSL cert to run the service over HTTPS
+      # sslCertPath: 'f' # Specify the path to the SSL cert to use when running the service over HTTPS
+      # sslKeyPath: 'f' # Specify the path to the SSL key to use when running the service over HTTPS
+      noStart: false # Does not start pact. This option is useful if you already have a running instance of pact locally
+  webpack:
+    webpackConfig: webpack.config.js
+    includeModules:
+      forceExclude:
+        - aws-sdk
+    packager: "yarn"
+
+functions:
+  pact_mock:
+    name: pact-mock-${self:provider.stage}
+    handler: src/functions/lambda.run
+    events:
+      - http: ANY /{path+}

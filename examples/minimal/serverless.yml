@@ -1,0 +1,35 @@
+service: pact-mock
+
+provider:
+  name: aws
+  versionFunctions: false
+  runtime: nodejs12.x
+  region: eu-west-2
+  stage: ${opt:stage, 'local'}
+
+plugins:
+  - serverless-webpack
+  - serverless-offline-pact
+  - 'serverless-offline'
+
+custom:
+  serverless-offline:
+    location: .webpack/service
+  pact:
+    stub:
+      filePath: '../../pact.json'
+      stages:
+        - local
+  webpack:
+    webpackConfig: webpack.config.js
+    includeModules:
+      forceExclude:
+        - aws-sdk
+    packager: "yarn"
+
+functions:
+  pact_mock:
+    name: pact-mock-${self:provider.stage}
+    handler: src/functions/lambda.run
+    events:
+      - http: ANY /{path+}
