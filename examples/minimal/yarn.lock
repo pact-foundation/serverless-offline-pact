@@ -8894,10 +8894,10 @@ serverless-http@^2.5.0:
   optionalDependencies:
     "@types/aws-lambda" "^8.10.19"
 
-serverless-offline-pact@^0.0.4:
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/serverless-offline-pact/-/serverless-offline-pact-0.0.4.tgz#97ae2bc8624f10c50e4c476270cf55658135b383"
-  integrity sha512-+rP3fyVa4MUtpl8cOkn/U6ngPeCghB8kaxXPTXsf5Tp0OMPHpU33s5xib+/CTeDnscvYwMsslVALuUsOdCGqiw==
+serverless-offline-pact@^0.0.5:
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/serverless-offline-pact/-/serverless-offline-pact-0.0.5.tgz#94014a9454cc2d24becb44ea63590d1fbcd41394"
+  integrity sha512-rqzm4+PjFMXKzCf6PyIBl0CUduLJbFRHUY2FCrRJbPSMUOUEZ2NezAcN68keB6dVy9R0lQ8GSda0JzwKxZS/Lw==
   dependencies:
     aws-sdk "^2.691.0"
     serverless "^1.72.0"
