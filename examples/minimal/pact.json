@@ -1,0 +1,43 @@
+{
+  "consumer": {
+    "name": "test-consumer"
+  },
+  "provider": {
+    "name": "json-provider"
+  },
+  "interactions": [
+    {
+      "description": "A get request to get a pet",
+      "providerState": "A pet 1845563262948980200 exists",
+      "request": {
+        "method": "GET",
+        "path": "/v2/pet/1845563262948980200"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "id": 1845563262948980200,
+          "name": "doggie",
+          "photoUrls": [
+            "string"
+          ],
+          "tags": [
+            {
+              "id": 0,
+              "name": "string"
+            }
+          ],
+          "status": "available"
+        }
+      }
+    }
+  ],
+  "metadata": {
+    "pactSpecification": {
+      "version": "2.0.0"
+    }
+  }
+}

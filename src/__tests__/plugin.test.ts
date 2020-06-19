@@ -9,7 +9,7 @@ describe("Serverless Plugin Pact Offline", () => {
     const plugin = new ServerlessOfflinePactPlugin(serverless);
     expect(plugin.hooks).toEqual({
       "before:offline:start:end": expect.any(Function),
-      "before:offline:start": expect.any(Function),
+      "before:offline:start:init": expect.any(Function),
     });
   });
 });

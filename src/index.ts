@@ -3,8 +3,6 @@ import { join } from "path";
 import Serverless from "serverless";
 import { ServerlessPluginCommand } from "../types/serverless-plugin-command";
 import { PactLaunchOptions, PactConfig } from "../types/Pact";
-import internal from "stream";
-import { chunksToLinesAsync } from "@rauschma/stringio";
 
 const PACT_LOCAL_PATH = join(__dirname, "../pact/bin");
 
@@ -101,19 +99,44 @@ class ServerlessOfflinePactPlugin {
     args.push(filePath);
 
     this.serverless.cli.log(
-      `Pact Offline - Starting pact stub service with ${args}`,
+      `Pact Offline - Starting pact stub service with command ${args.join(
+        " ",
+      )}`,
     );
+    // let started = false;
     const proc = spawn("/bin/sh", ["-c", args.join(" ")]);
-    const startupLog: string[] = [];
-    const started = await this.waitForStart(proc.stdout, startupLog);
 
-    if (proc.pid == null || !started) {
-      throw new Error("Unable to start the Pact Local process");
-    }
+    // TODO:- We are trying to wait under the stub service is operation,
+    // but this code causes logging to fail when the pact mock recieves incoming requests
+
+    // for await (const data of proc.stdout) {
+    //   if ((data.toString()).includes('WEBrick::HTTPServer#start: pid=')){
+    //     started = true
+    //     break;
+    //   }
+    // };
+
+    //  So we are just pausing execution for a second instead.
+
+    const pause = async (duration: number) =>
+      new Promise((r) => setTimeout(r, duration));
+    await pause(1000);
+
+    proc.stdout.on("data", (data) => {
+      this.serverless.cli.log(`${data.toString()}`);
+    });
+
+    proc.stderr.on("data", (data) => {
+      this.serverless.cli.log(`${data.toString()}`);
+    });
 
     proc.on("error", (error) => {
-      throw error;
+      this.serverless.cli.log(`${error.toString()}`);
     });
+
+    if (proc.pid == null) {
+      throw new Error("Unable to start the Pact Local process");
+    }
 
     this.pactInstances[port] = proc;
 
@@ -131,21 +154,7 @@ class ServerlessOfflinePactPlugin {
       });
     });
 
-    return { proc, port, host, filePath, startupLog };
-  };
-
-  private waitForStart = async (
-    readable: internal.Readable,
-    startupLog: string[],
-  ) => {
-    let started = false;
-    for await (const line of chunksToLinesAsync(readable)) {
-      startupLog.push(line);
-      if (line.includes("WEBrick::HTTPServer#start: pid=")) {
-        return (started = true);
-      }
-    }
-    return started;
+    return { proc, port, host, filePath };
   };
 
   private killPactProcess = (options: PactLaunchOptions) => {
@@ -177,28 +186,22 @@ class ServerlessOfflinePactPlugin {
       return;
     }
 
-    const {
-      port,
-      proc,
-      host,
-      filePath,
-      startupLog,
-    } = await this.spawnPactProcess(this.PactConfig.stub);
-
-    proc.on("close", (code) => {
-      this.serverless.cli.log(
-        `Pact Offline - Failed to start with code ${code}`,
-      );
-    });
-    proc.on("data", (data) => {
-      this.serverless.cli.log(`Pact Offline - ${data.toString()}`);
-    });
+    const { port, host, proc, filePath } = await this.spawnPactProcess(
+      this.PactConfig.stub,
+    );
 
     this.serverless.cli.log(
       `Pact Offline - Loaded ${filePath}, visit: http://${host}:${port}`,
     );
 
-    this.serverless.cli.log(`${startupLog}`);
+    proc.on("close", (code) => {
+      if (code !== 0) {
+        this.serverless.cli.log(
+          `Pact Offline - Failed to start with code ${code}`,
+        );
+        throw new Error(`Pact Offline - Failed to start with code ${code}`);
+      }
+    });
 
     await Promise.resolve();
   };

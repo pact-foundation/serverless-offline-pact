@@ -39,14 +39,6 @@ plugins:
 
 The plugin downloads the official [pact standalone](https://github.com/pact-foundation/pact-ruby-standalone/) on Your Computer and allows the serverless-offline app to launch it.
 
-- Start a stub service with the given pact file(s) or directories. 
-- Pact URIs may be local file or directory paths, or HTTP.
-- Include any basic auth details in the URL using the format https://USERNAME:PASSWORD@URI. 
-- Where multiple matching interactions are found, the interactions will be sorted by response status, and the first one will be returned. 
-- This may lead to some non-deterministic behaviour. If you are having problems with this, please raise it on the pact slack channel.
-- Note that only versions 1 and 2 of the pact specification are currently fully supported. 
-- Pacts using the v3 format may be used, however, any matching features added in v3 will currently be ignored.
-
 ## Configuration
 
 To configure pact Offline, add a `pact` section like this to your `serverless.yml`:
@@ -64,7 +56,9 @@ custom:
       filePath: 'pact.json'
 ```
 
-And start serverless-offline in your usual way `serverless-offline start`
+See `./examples/minimal/serverless.yml`  
+
+You can run `yarn install && yarn test:all` to see it in action
 
 The above is the minimal set of options, the full options are below
 
@@ -87,6 +81,10 @@ custom:
       sslKeyPath: '' # Specify the path to the SSL key to use when running the service over HTTPS
       noStart: true # Does not start pact. This option is useful if you already have a running instance of pact locally
 ```
+
+See the `./examples/full/serverless.yml` for a working serverless project as an example
+
+You can run `yarn install && yarn test:all` to see it in action
 
 ## Pact Stub Service Features
 

@@ -1,6 +1,6 @@
 {
   "name": "serverless-offline-pact",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Serverless Framework Plugin to download and run a pact stub service",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -73,7 +73,6 @@
     "dist/**/*"
   ],
   "dependencies": {
-    "@rauschma/stringio": "^1.4.0",
     "aws-sdk": "^2.691.0",
     "serverless": "^1.72.0"
   }
