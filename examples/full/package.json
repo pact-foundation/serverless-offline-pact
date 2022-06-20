@@ -24,7 +24,7 @@
     "koa-proxy": "^1.0.0-alpha.3",
     "koa-route": "^3.2.0",
     "pino": "^6.2.1",
-    "serverless": "1.71.1",
+    "serverless": "3.0.0",
     "serverless-http": "^2.5.0",
     "serverless-offline-pact": "^0.0.5",
     "typescript": "^3.9.2"
