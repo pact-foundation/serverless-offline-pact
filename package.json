@@ -73,7 +73,7 @@
     "dist/**/*"
   ],
   "dependencies": {
-    "aws-sdk": "^2.691.0",
+    "aws-sdk": "^2.1354.0",
     "serverless": "^1.72.0"
   }
 }
