@@ -19,7 +19,7 @@
     "@types/pino": "^6.0.1",
     "aws-sdk": "^2.678.0",
     "axios": "^0.19.2",
-    "copy-webpack-plugin": "^6.0.2",
+    "copy-webpack-plugin": "^7.0.0",
     "koa": "^2.11.0",
     "koa-proxy": "^1.0.0-alpha.3",
     "koa-route": "^3.2.0",
